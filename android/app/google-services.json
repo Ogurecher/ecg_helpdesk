@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "970271698688",
+    "project_id": "ecg-helpdesk",
+    "storage_bucket": "ecg-helpdesk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970271698688:android:63e01d8e1d809fd4b24de5",
+        "android_client_info": {
+          "package_name": "com.Ogurecher.ECG_Helpdesk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970271698688-313ft6k03638dot8qi5dgphq7h83ic46.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGzoBYnCAKNhy7f8m92h28zRgGt_p5_To"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970271698688-313ft6k03638dot8qi5dgphq7h83ic46.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
