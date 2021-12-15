@@ -1,5 +1,5 @@
+import 'package:ecg_helpdesk/screens/navigation_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ecg_helpdesk/screens/channel_search.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ChannelSearch(),
+      home: NavigationScreen(0),
     );
   }
 }

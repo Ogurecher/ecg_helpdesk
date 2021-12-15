@@ -4,6 +4,7 @@ import 'package:ecg_helpdesk/widgets/channel_tile.dart';
 import 'package:flutter/material.dart';
 
 class ChannelSearch extends StatefulWidget {
+  final int currentNavigationIndex = 0;
   const ChannelSearch({ Key? key }) : super(key: key);
 
   @override
@@ -33,7 +34,7 @@ class _ChannelSearchState extends State<ChannelSearch> {
       shrinkWrap: true,
       itemCount: allChannelsSnapshot!.docs.length,
       itemBuilder: (context, index) {
-        return channelTile(allChannelsSnapshot!.docs[index].get('name'));
+        return channelTile(context, allChannelsSnapshot!.docs[index], widget.currentNavigationIndex);
       }
     );
   }

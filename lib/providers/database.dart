@@ -61,12 +61,24 @@ class DatabaseMethods {
     return await FirebaseFirestore.instance.collection('channels').get();
   }
 
+  static getChannelsById(List<String> channelIds) async {
+    return await FirebaseFirestore.instance.collection('channels').where('id', whereIn: channelIds).get();
+  }
+
   static getChannelByName(String channelName) async {
     return await FirebaseFirestore.instance.collection('channels').where('name', isEqualTo: channelName).get();
   }
 
   static getSubscribedChannels(String userId) async {
-    return await FirebaseFirestore.instance.collection('channelSubscriptions').where('userId', isEqualTo: userId).get();
+    QuerySnapshot subscribedChannelIdsSnapshot = await FirebaseFirestore.instance.collection('channelSubscriptions').where('userId', isEqualTo: userId).get();
+
+    List<String> channelIds = [];
+
+    for (QueryDocumentSnapshot doc in subscribedChannelIdsSnapshot.docs) {
+      channelIds.add(doc.get('channelId'));
+    }
+
+    return await getChannelsById(channelIds);;
   }
 
   static getChannelSubscriptions(String channelId) async {
@@ -75,6 +87,13 @@ class DatabaseMethods {
 
   static getChannelTickets(String channelId) async {
     return await FirebaseFirestore.instance.collection('tickets').where('channelId', isEqualTo: channelId).get();
+  }
+
+  static getUnassignedChannelTickets(String channelId) async {
+    return await FirebaseFirestore.instance.collection('tickets').where('channelId', isEqualTo: channelId)
+      .where('status', isEqualTo: 'open')
+      .where('assigneeId', isEqualTo: '')
+      .get();
   }
 
   static getTicketMessages(String ticketId) async {
