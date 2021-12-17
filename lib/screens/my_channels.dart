@@ -28,8 +28,9 @@ class _MyChannelsState extends State<MyChannels> {
     });
   }
 
-  createChannel() {
-    DatabaseMethods.addChannel(_createChannelNameFieldController.text);
+  createChannel() async {
+    DocumentReference channel = await DatabaseMethods.addChannel(_createChannelNameFieldController.text);
+    DatabaseMethods.subscribeUserToChannel(channel.id, userIdMock);
     snapshotChannels();
   }
 

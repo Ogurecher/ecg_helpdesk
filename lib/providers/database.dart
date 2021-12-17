@@ -9,10 +9,10 @@ class DatabaseMethods {
       'name': channelName
     };
 
-    FirebaseFirestore.instance.collection('channels').add(channelMap);
+    return FirebaseFirestore.instance.collection('channels').add(channelMap);
   }
 
-  static addTicket(String userId, String channelId, String ticketName) {
+  static addTicket(String userId, String channelId, String ticketName) async {
     Map<String, dynamic> ticketMap = {
       'creatorId': userId,
       'assigneeId': '',
@@ -22,7 +22,14 @@ class DatabaseMethods {
       'dateCreated': Timestamp.now()
     };
 
-    FirebaseFirestore.instance.collection('tickets').add(ticketMap);
+    DocumentReference ticket = await FirebaseFirestore.instance.collection('tickets').add(ticketMap);
+
+    Map<String, String> ticketSubsctiptionMap = {
+      'userId': userId,
+      'ticketId': ticket.id
+    };
+
+    FirebaseFirestore.instance.collection('ticketSubscriptions').add(ticketSubsctiptionMap);
   }
 
   static addMessage(String userId, String ticketId, String text, String fileURL) {
@@ -69,6 +76,10 @@ class DatabaseMethods {
     return await FirebaseFirestore.instance.collection('channels').where(FieldPath.documentId, whereIn: channelIds).get();
   }
 
+  static getTicketsById(List<String> ticketIds) async {
+    return await FirebaseFirestore.instance.collection('tickets').where(FieldPath.documentId, whereIn: ticketIds).get();
+  }
+
   static getChannelByName(String channelName) async {
     return await FirebaseFirestore.instance.collection('channels').where('name', isEqualTo: channelName).get();
   }
@@ -109,7 +120,15 @@ class DatabaseMethods {
   }
 
   static getUserTickets(String userId) async {
-    return await FirebaseFirestore.instance.collection('ticketSubscriptions').where('userId', isEqualTo: userId).get();
+    QuerySnapshot userTicketsIdsSnapshot = await FirebaseFirestore.instance.collection('ticketSubscriptions').where('userId', isEqualTo: userId).get();
+
+    List<String> ticketIds = [];
+
+    for (QueryDocumentSnapshot doc in userTicketsIdsSnapshot.docs) {
+      ticketIds.add(doc.get('ticketId'));
+    }
+
+    return await getTicketsById(ticketIds);
   }
 
   // UPDATE

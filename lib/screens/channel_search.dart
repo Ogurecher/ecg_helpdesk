@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
+import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/channel_tile.dart';
 import 'package:ecg_helpdesk/widgets/create_floating_button.dart';
 import 'package:flutter/material.dart';
@@ -27,8 +28,9 @@ class _ChannelSearchState extends State<ChannelSearch> {
     });
   }
 
-  createChannel() {
-    DatabaseMethods.addChannel(_createChannelNameFieldController.text);
+  createChannel() async {
+    DocumentReference channel = await DatabaseMethods.addChannel(_createChannelNameFieldController.text);
+    DatabaseMethods.subscribeUserToChannel(channel.id, userIdMock);
     snapshotChannels();
   }
 
