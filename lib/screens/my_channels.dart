@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/channel_tile.dart';
+import 'package:ecg_helpdesk/widgets/create_floating_button.dart';
 import 'package:flutter/material.dart';
 
 class MyChannels extends StatefulWidget {
@@ -16,12 +17,20 @@ class _MyChannelsState extends State<MyChannels> {
 
   QuerySnapshot? myChannelsSnapshot;
 
+  final GlobalKey<FormState> _createChannelKey = GlobalKey<FormState>();
+  final TextEditingController _createChannelNameFieldController = TextEditingController();
+
   snapshotChannels() {
     DatabaseMethods.getSubscribedChannels(userIdMock).then((value) {
       setState(()  {
         myChannelsSnapshot = value;
       });
     });
+  }
+
+  createChannel() {
+    DatabaseMethods.addChannel(_createChannelNameFieldController.text);
+    snapshotChannels();
   }
 
   @override
@@ -44,6 +53,7 @@ class _MyChannelsState extends State<MyChannels> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("My Channels")),
+      floatingActionButton: createFloatingButton(context, _createChannelKey, _createChannelNameFieldController, createChannel),
       body: Container(
         child: myChannelsList(),
       ),

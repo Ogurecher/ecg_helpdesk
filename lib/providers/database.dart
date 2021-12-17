@@ -57,12 +57,16 @@ class DatabaseMethods {
 
   // READ
 
+  static getChannelsListener() {
+    return FirebaseFirestore.instance.collection('channels').snapshots();
+  }
+
   static getChannels() async {
     return await FirebaseFirestore.instance.collection('channels').get();
   }
 
   static getChannelsById(List<String> channelIds) async {
-    return await FirebaseFirestore.instance.collection('channels').where('id', whereIn: channelIds).get();
+    return await FirebaseFirestore.instance.collection('channels').where(FieldPath.documentId, whereIn: channelIds).get();
   }
 
   static getChannelByName(String channelName) async {
@@ -78,7 +82,7 @@ class DatabaseMethods {
       channelIds.add(doc.get('channelId'));
     }
 
-    return await getChannelsById(channelIds);;
+    return await getChannelsById(channelIds);
   }
 
   static getChannelSubscriptions(String channelId) async {
