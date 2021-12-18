@@ -111,8 +111,8 @@ class DatabaseMethods {
       .get();
   }
 
-  static getTicketMessages(String ticketId) async {
-    return await FirebaseFirestore.instance.collection('messages').where('ticketId', isEqualTo: ticketId).get();
+  static getTicketMessagesStream(String ticketId) async {
+    return FirebaseFirestore.instance.collection('messages').where('ticketId', isEqualTo: ticketId).orderBy('dateSent').snapshots();
   }
 
   static getUser(String userId) async {
