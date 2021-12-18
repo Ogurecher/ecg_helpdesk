@@ -3,7 +3,10 @@ import 'package:ecg_helpdesk/providers/database.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/bottom_navigation_bar.dart';
 import 'package:ecg_helpdesk/widgets/message_field.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class TicketMessages extends StatefulWidget {
   final QueryDocumentSnapshot ticket;
@@ -19,11 +22,49 @@ class _TicketMessagesState extends State<TicketMessages> {
 
   final GlobalKey<FormState> _sendMessageKey = GlobalKey<FormState>();
   final TextEditingController _messageController = TextEditingController();
+  File? _imageFile;
 
   Stream<QuerySnapshot>? ticketMessagesStream;
 
-  sendMessage() {
-    DatabaseMethods.addMessage(userIdMock, widget.ticket.id, _messageController.text, '');
+  sendMessage() async {
+    String fileURL = '';
+
+    if (_imageFile != null) {
+      fileURL = await uploadImage();
+    }
+
+    DatabaseMethods.addMessage(userIdMock, widget.ticket.id, _messageController.text, fileURL);
+  }
+
+  pickImage() async {
+    ImagePicker picker = ImagePicker();
+
+    XFile? imageXFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (imageXFile != null) {
+      File? imageFile = File(imageXFile.path);
+
+      setState(() {
+        _imageFile = imageFile;
+      });
+    }
+  }
+
+  uploadImage() async {
+    FirebaseStorage _storage = FirebaseStorage.instance;
+    Reference ref = _storage.ref().child('img' + DateTime.now().toString());
+    
+    TaskSnapshot uploadTaskSnapshot = await ref.putFile(_imageFile!);
+
+    setState(() {
+      _imageFile = null;
+    });
+
+    return uploadTaskSnapshot.ref.getDownloadURL();
+  }
+
+  Widget imageFromURL(String url) {
+    return url == '' ? Container() : Image.network(url);
   }
 
   Widget messageList() {
@@ -35,7 +76,12 @@ class _TicketMessagesState extends State<TicketMessages> {
           shrinkWrap: true,
           itemBuilder: (context, index){
             return Container(
-              child: Text(snapshot.data!.docs[index].get('text')),
+              child: Column(
+                children: [
+                  imageFromURL(snapshot.data!.docs[index].get('fileURL')),
+                  Text(snapshot.data!.docs[index].get('text')),
+                ],
+              ),
             );
           },
         ) : Container();
@@ -61,7 +107,7 @@ class _TicketMessagesState extends State<TicketMessages> {
       body: Stack(
         children: [
           messageList(),
-          messageField(_sendMessageKey, _messageController, sendMessage, (){})
+          messageField(_sendMessageKey, _messageController, sendMessage, pickImage)
         ],
       ),
       bottomNavigationBar: bottomNavigationBar(widget.currentNavigationIndex, context),

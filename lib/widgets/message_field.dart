@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget messageField(GlobalKey<FormState> formKey, TextEditingController controller, Function sendMessage, Function attachFile) {
+Widget messageField(GlobalKey<FormState> formKey, TextEditingController controller, Function sendMessage, Function pickFile) {
   return Align(
     alignment: Alignment.bottomLeft,
     child: Form(
@@ -8,7 +8,9 @@ Widget messageField(GlobalKey<FormState> formKey, TextEditingController controll
       child: Row(
         children: [
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              pickFile();
+            },
             child: Icon(Icons.attach_file)
           ),
           Expanded(
@@ -25,9 +27,9 @@ Widget messageField(GlobalKey<FormState> formKey, TextEditingController controll
             ),
           ),
           TextButton(
-            onPressed: () {
-              sendMessage();
-              
+            onPressed: () async {
+              await sendMessage();
+
               controller.clear();
             },
             child: Icon(Icons.send)
