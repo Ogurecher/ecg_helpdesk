@@ -24,9 +24,13 @@ class DatabaseMethods {
 
     DocumentReference ticket = await FirebaseFirestore.instance.collection('tickets').add(ticketMap);
 
+    subscribeUserToTicket(userId, ticket.id);
+  }
+
+  static subscribeUserToTicket(String userId, String ticketId) {
     Map<String, String> ticketSubsctiptionMap = {
       'userId': userId,
-      'ticketId': ticket.id
+      'ticketId': ticketId
     };
 
     FirebaseFirestore.instance.collection('ticketSubscriptions').add(ticketSubsctiptionMap);
@@ -73,7 +77,11 @@ class DatabaseMethods {
   }
 
   static getChannelsById(List<String> channelIds) async {
-    return await FirebaseFirestore.instance.collection('channels').where(FieldPath.documentId, whereIn: channelIds).get();
+    if (channelIds.isEmpty) {
+      return null;
+    } else {
+      return await FirebaseFirestore.instance.collection('channels').where(FieldPath.documentId, whereIn: channelIds).get();
+    }
   }
 
   static getTicketsById(List<String> ticketIds) async {
@@ -134,25 +142,39 @@ class DatabaseMethods {
   // UPDATE
 
   static assignTicket(String ticketId, String userId) {
-    
+    FirebaseFirestore.instance.collection('tickets').doc(ticketId).update({
+      'assigneeId': userId
+    });
+
+    subscribeUserToTicket(userId, ticketId);
   }
 
-  static unassignTicket(String ticketId) {
+  static unassignTicket(String ticketId, String userId) async {
+    FirebaseFirestore.instance.collection('tickets').doc(ticketId).update({
+      'assigneeId': ''
+    });
 
+    QuerySnapshot ticketSubscription = await FirebaseFirestore.instance.collection('ticketSubscriptions').where('ticketId', isEqualTo: ticketId).where('userId', isEqualTo: userId).get();
+    ticketSubscription.docs.first.reference.delete();
   }
 
   static openTicket(String ticketId) {
-
+    FirebaseFirestore.instance.collection('tickets').doc(ticketId).update({
+      'status': 'open'
+    });
   }
 
   static closeTicket(String ticketId) {
-
+    FirebaseFirestore.instance.collection('tickets').doc(ticketId).update({
+      'status': 'closed'
+    });
   }
 
   // DELETE
 
-  static unsubscribeUserFromChannel(String channelId, String userId) {
-
+  static unsubscribeUserFromChannel(String channelId, String userId) async {
+    QuerySnapshot channelSubscription = await FirebaseFirestore.instance.collection('channelSubscriptions').where('channelId', isEqualTo: channelId).where('userId', isEqualTo: userId).get();
+    channelSubscription.docs.first.reference.delete();
   }
 
   static deleteChannel(String channelId) {

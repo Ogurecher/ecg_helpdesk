@@ -45,7 +45,7 @@ class _MyChannelsState extends State<MyChannels> {
       shrinkWrap: true,
       itemCount: myChannelsSnapshot!.docs.length,
       itemBuilder: (context, index) {
-        return channelTile(context, myChannelsSnapshot!.docs[index], widget.currentNavigationIndex);
+        return channelTile(context, myChannelsSnapshot!.docs[index], widget.currentNavigationIndex, isSubscribed: true);
       }
     );
   }

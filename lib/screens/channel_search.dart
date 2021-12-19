@@ -16,6 +16,7 @@ class ChannelSearch extends StatefulWidget {
 class _ChannelSearchState extends State<ChannelSearch> {
 
   QuerySnapshot? allChannelsSnapshot;
+  List<String> subscribedChannelIds = [];
 
   final GlobalKey<FormState> _createChannelKey = GlobalKey<FormState>();
   final TextEditingController _createChannelNameFieldController = TextEditingController();
@@ -28,6 +29,21 @@ class _ChannelSearchState extends State<ChannelSearch> {
     });
   }
 
+  updateSubscribedChannelIds() {
+    DatabaseMethods.getSubscribedChannels(userIdMock).then((value) {
+      if (value != null) {
+        List<String> documentIds = [];
+        for (QueryDocumentSnapshot doc in value.docs) {
+          documentIds.add(doc.id);
+        }
+
+        setState(() {
+          subscribedChannelIds = documentIds;
+        });
+      }
+    });
+  }
+
   createChannel() async {
     DocumentReference channel = await DatabaseMethods.addChannel(_createChannelNameFieldController.text);
     DatabaseMethods.subscribeUserToChannel(channel.id, userIdMock);
@@ -37,6 +53,7 @@ class _ChannelSearchState extends State<ChannelSearch> {
   @override
   void initState() {
     snapshotChannels();
+    updateSubscribedChannelIds();
     super.initState();
   }
 
@@ -45,7 +62,8 @@ class _ChannelSearchState extends State<ChannelSearch> {
       shrinkWrap: true,
       itemCount: allChannelsSnapshot!.docs.length,
       itemBuilder: (context, index) {
-        return channelTile(context, allChannelsSnapshot!.docs[index], widget.currentNavigationIndex);
+        bool isSubscribed = subscribedChannelIds.contains(allChannelsSnapshot!.docs[index].id);
+        return channelTile(context, allChannelsSnapshot!.docs[index], widget.currentNavigationIndex, isSubscribed: isSubscribed);
       }
     );
   }
@@ -59,7 +77,7 @@ class _ChannelSearchState extends State<ChannelSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Channel Search")),
+      appBar: AppBar(title: const Text("All Channels")),
       floatingActionButton: createFloatingButton(context, _createChannelKey, _createChannelNameFieldController, createChannel),
       body: Container(
         child: searchList(),
