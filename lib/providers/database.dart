@@ -48,13 +48,13 @@ class DatabaseMethods {
     FirebaseFirestore.instance.collection('messages').add(messageMap);
   }
 
-  static addUser(String userName, String userEmail) {
+  static addUser(String userName, String userEmail) async {
     Map<String, String> userMap = {
       'name': userName,
       'email': userEmail
     };
 
-    FirebaseFirestore.instance.collection('users').add(userMap);
+    return await FirebaseFirestore.instance.collection('users').add(userMap);
   }
 
   static subscribeUserToChannel(String channelId, String userId) {
@@ -85,7 +85,11 @@ class DatabaseMethods {
   }
 
   static getTicketsById(List<String> ticketIds) async {
+    if (ticketIds.isEmpty) {
+      return null;
+    } else {
     return await FirebaseFirestore.instance.collection('tickets').where(FieldPath.documentId, whereIn: ticketIds).get();
+    }
   }
 
   static getChannelByName(String channelName) async {
@@ -125,6 +129,10 @@ class DatabaseMethods {
 
   static getUser(String userId) async {
     return await FirebaseFirestore.instance.collection('users').where('userId', isEqualTo: userId).get();
+  }
+
+  static getUserByEmail(String userEmail) async {
+    return await FirebaseFirestore.instance.collection('users').where('email', isEqualTo: userEmail).get();
   }
 
   static getUserTickets(String userId) async {

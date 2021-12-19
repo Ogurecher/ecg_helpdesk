@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
+import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/channel_tickets_tile.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,9 @@ class _MyTicketsState extends State<MyTickets> {
 
   QuerySnapshot? myTicketsSnapshot;
 
-  snapshotTickets() {
-    DatabaseMethods.getUserTickets(userIdMock).then((value) {
+  snapshotTickets() async {
+    String? userId = await HelperFunctions.getUserIdSharedPreference();
+    DatabaseMethods.getUserTickets(userId!).then((value) {
       setState(()  {
         myTicketsSnapshot = value;
       });

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
 import 'package:ecg_helpdesk/screens/ticket_messages.dart';
+import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:flutter/material.dart';
 
@@ -43,8 +44,10 @@ class _AssignButtonState extends State<AssignButton> {
 
   @override
   void initState() {
-    setState(() {
-      assignedToTicket = widget.ticket.get('assigneeId') == userIdMock;
+    HelperFunctions.getUserIdSharedPreference().then((userId) {
+      setState(() {
+        assignedToTicket = widget.ticket.get('assigneeId') == userId;
+      });
     });
 
     super.initState();
@@ -54,15 +57,17 @@ class _AssignButtonState extends State<AssignButton> {
   Widget build(BuildContext context) {
     return assignedToTicket == false ? 
       TextButton(
-        onPressed: () {
-          DatabaseMethods.assignTicket(widget.ticket.id, userIdMock);
+        onPressed: () async {
+          String? userId = await HelperFunctions.getUserIdSharedPreference();
+          await DatabaseMethods.assignTicket(widget.ticket.id, userId!);
           updateTicketAssignment();
         },
         child: const Icon(Icons.contact_page)
       ) :
       TextButton(
-        onPressed: () {
-          DatabaseMethods.unassignTicket(widget.ticket.id, userIdMock);
+        onPressed: () async {
+          String? userId = await HelperFunctions.getUserIdSharedPreference();
+          await DatabaseMethods.unassignTicket(widget.ticket.id, userId!);
           updateTicketAssignment();
         },
         child: const Icon(Icons.restore_page)

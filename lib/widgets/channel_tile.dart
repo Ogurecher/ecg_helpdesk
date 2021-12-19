@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
 import 'package:ecg_helpdesk/screens/channel_tickets.dart';
+import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:flutter/material.dart';
 
@@ -57,15 +58,17 @@ class _SubscribeButtonState extends State<SubscribeButton> {
   Widget build(BuildContext context) {
     return subscribedToChannel == false ? 
       TextButton(
-        onPressed: () {
-          DatabaseMethods.subscribeUserToChannel(widget.channel.id, userIdMock);
+        onPressed: () async {
+          String? userId = await HelperFunctions.getUserIdSharedPreference();
+          await DatabaseMethods.subscribeUserToChannel(widget.channel.id, userId!);
           updateChannelSubscription();
         },
         child: const Icon(Icons.notifications_off)
       ) :
       TextButton(
-        onPressed: () {
-          DatabaseMethods.unsubscribeUserFromChannel(widget.channel.id, userIdMock);
+        onPressed: () async {
+          String? userId = await HelperFunctions.getUserIdSharedPreference();
+          await DatabaseMethods.unsubscribeUserFromChannel(widget.channel.id, userId!);
           updateChannelSubscription();
         },
         child: const Icon(Icons.notifications_on)

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
+import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/bottom_navigation_bar.dart';
 import 'package:ecg_helpdesk/widgets/channel_tickets_tile.dart';
@@ -31,8 +32,9 @@ class _ChannelTicketsState extends State<ChannelTickets> {
     });
   }
 
-  createTicket() {
-    DatabaseMethods.addTicket(userIdMock, widget.channel.id, _createTicketNameFieldController.text);
+  createTicket() async {
+    String? userId = await HelperFunctions.getUserIdSharedPreference();
+    await DatabaseMethods.addTicket(userId!, widget.channel.id, _createTicketNameFieldController.text);
     snapshotOpenChannelTickets(widget.channel.id);
   }
 

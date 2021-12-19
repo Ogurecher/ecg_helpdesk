@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
+import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/channel_tile.dart';
 import 'package:ecg_helpdesk/widgets/create_floating_button.dart';
@@ -20,8 +21,9 @@ class _MyChannelsState extends State<MyChannels> {
   final GlobalKey<FormState> _createChannelKey = GlobalKey<FormState>();
   final TextEditingController _createChannelNameFieldController = TextEditingController();
 
-  snapshotChannels() {
-    DatabaseMethods.getSubscribedChannels(userIdMock).then((value) {
+  snapshotChannels() async {
+    String? userId = await HelperFunctions.getUserIdSharedPreference();
+    DatabaseMethods.getSubscribedChannels(userId!).then((value) {
       setState(()  {
         myChannelsSnapshot = value;
       });
@@ -30,7 +32,9 @@ class _MyChannelsState extends State<MyChannels> {
 
   createChannel() async {
     DocumentReference channel = await DatabaseMethods.addChannel(_createChannelNameFieldController.text);
-    DatabaseMethods.subscribeUserToChannel(channel.id, userIdMock);
+    String? userId = await HelperFunctions.getUserIdSharedPreference();
+
+    DatabaseMethods.subscribeUserToChannel(channel.id, userId!);
     snapshotChannels();
   }
 

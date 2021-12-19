@@ -8,7 +8,7 @@ FloatingActionButton createFloatingButton(BuildContext context, GlobalKey<FormSt
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Create channel'),
+            title: Text('Create'),
             content: Form(
               key: formKey,
               child: TextFormField(
@@ -31,9 +31,9 @@ FloatingActionButton createFloatingButton(BuildContext context, GlobalKey<FormSt
                 child: Text('Cancel')
               ),
               TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (formKey.currentState!.validate()) {
-                    onCreateFunction();
+                    await onCreateFunction();
 
                     formController.clear();
                     Navigator.of(context).pop();

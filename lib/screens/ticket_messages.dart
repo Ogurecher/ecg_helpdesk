@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecg_helpdesk/providers/database.dart';
+import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/bottom_navigation_bar.dart';
 import 'package:ecg_helpdesk/widgets/message_field.dart';
@@ -34,7 +35,9 @@ class _TicketMessagesState extends State<TicketMessages> {
       fileURL = await uploadImage();
     }
 
-    DatabaseMethods.addMessage(userIdMock, widget.ticket.id, _messageController.text, fileURL);
+    String? userId = await HelperFunctions.getUserIdSharedPreference();
+
+    DatabaseMethods.addMessage(userId!, widget.ticket.id, _messageController.text, fileURL);
   }
 
   pickImage() async {
