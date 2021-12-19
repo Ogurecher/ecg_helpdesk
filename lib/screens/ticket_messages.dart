@@ -25,6 +25,7 @@ class _TicketMessagesState extends State<TicketMessages> {
   File? _imageFile;
 
   Stream<QuerySnapshot>? ticketMessagesStream;
+  bool isOpen = true;
 
   sendMessage() async {
     String fileURL = '';
@@ -89,12 +90,33 @@ class _TicketMessagesState extends State<TicketMessages> {
     );
   }
 
+  FloatingActionButton closeTicketButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        if (isOpen == true) {
+          DatabaseMethods.closeTicket(widget.ticket.id);
+        } else {
+          DatabaseMethods.openTicket(widget.ticket.id);
+        }
+
+        setState(() {
+          isOpen = !isOpen;
+        });
+      },
+      child: isOpen ? Icon(Icons.check) : Icon(Icons.settings_backup_restore),
+    );
+  }
+
   @override
   void initState() {
     DatabaseMethods.getTicketMessagesStream(widget.ticket.id).then((value) {
       setState(() {
         ticketMessagesStream = value;
       });
+    });
+
+    setState(() {
+      isOpen = widget.ticket.get('status') == 'open' ? true : false;
     });
 
     super.initState();
@@ -111,6 +133,8 @@ class _TicketMessagesState extends State<TicketMessages> {
         ],
       ),
       bottomNavigationBar: bottomNavigationBar(widget.currentNavigationIndex, context),
+      floatingActionButton: closeTicketButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
     );
   }
 }
