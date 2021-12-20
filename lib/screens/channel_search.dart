@@ -64,13 +64,14 @@ class _ChannelSearchState extends State<ChannelSearch> {
   }
 
   Widget searchList() {
-    return allChannelsSnapshot == null ? ListView() : ListView.builder(
+    return allChannelsSnapshot == null ? ListView() : ListView.separated(
       shrinkWrap: true,
       itemCount: allChannelsSnapshot!.docs.length,
       itemBuilder: (context, index) {
         bool isSubscribed = subscribedChannelIds.contains(allChannelsSnapshot!.docs[index].id);
         return channelTile(context, allChannelsSnapshot!.docs[index], widget.currentNavigationIndex, isSubscribed: isSubscribed);
-      }
+      },
+      separatorBuilder: (context, index) => Divider(),
     );
   }
 

@@ -5,22 +5,18 @@ import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:flutter/material.dart';
 
-Widget channelTicketsTile(BuildContext context, QueryDocumentSnapshot ticket, int currentNavigationIndex, {bool isSubscribed = false}) {
-  return Container(
-    child: Row(
-      children: [
-        Container(
-          child: TextButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => TicketMessages(ticket, currentNavigationIndex)));
-            },
-            child: Text(ticket.get('name'))
-          ),
-        ),
-        Spacer(),
-        AssignButton(ticket)
-      ],
-    ),
+Widget channelTicketsTile(BuildContext context, QueryDocumentSnapshot ticket, int currentNavigationIndex) {
+  DateTime dateCreated = ticket.get('dateCreated').toDate();
+  String timeCreated = '${dateCreated.day.toString()}/${dateCreated.month.toString()}  ${dateCreated.hour.toString()}:${dateCreated.minute.toString()}';
+
+  return ListTile(
+    title: Text(ticket.get('name'), style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),),
+    subtitle: Text(timeCreated),
+    trailing: AssignButton(ticket),
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => TicketMessages(ticket, currentNavigationIndex)));
+    },
+    contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 24),
   );
 }
 

@@ -28,12 +28,13 @@ class _MyTicketsState extends State<MyTickets> {
   }
 
   Widget myTicketsList() {
-    return myTicketsSnapshot == null ? ListView() : ListView.builder(
+    return myTicketsSnapshot == null ? ListView() : ListView.separated(
       shrinkWrap: true,
       itemCount: myTicketsSnapshot!.docs.length,
       itemBuilder: (context, index) {
         return channelTicketsTile(context, myTicketsSnapshot!.docs[index], widget.currentNavigationIndex);
-      }
+      },
+      separatorBuilder: (context, index) => Divider(),
     );
   }
 

@@ -52,9 +52,7 @@ class _MyChannelsState extends State<MyChannels> {
       itemBuilder: (context, index) {
         return channelTile(context, myChannelsSnapshot!.docs[index], widget.currentNavigationIndex, isSubscribed: true);
       },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
+      separatorBuilder: (context, index) => Divider(),
     );
   }
 

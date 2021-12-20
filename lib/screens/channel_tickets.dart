@@ -51,9 +51,7 @@ class _ChannelTicketsState extends State<ChannelTickets> {
       itemBuilder: (context, index) {
         return channelTicketsTile(context, unassignedChannelTicketsSnapshot!.docs[index], widget.currentNavigationIndex);
       },
-      separatorBuilder: (context, index) {
-        return Divider();
-      },
+      separatorBuilder: (context, index) => Divider(),
     );
   }
 
