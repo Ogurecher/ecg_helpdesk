@@ -90,9 +90,9 @@ class _SignUpState extends State<SignUp> {
                 ],
               ),
             ),
-            const SizedBox(height: 8,),
-            GestureDetector(
-              onTap: () {
+            const SizedBox(height: 40,),
+            TextButton(
+              onPressed: () {
                 signUserUp();
               },
               child: Container(
@@ -100,32 +100,10 @@ class _SignUpState extends State<SignUp> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xff007EF4),
-                      Color(0xff2A75BC),
-                    ]
-                  ),
+                  color: Colors.blue,
                   borderRadius: BorderRadius.circular(30)
                 ),
-                child: Text('Sign Up'),
-              ),
-            ),
-            const SizedBox(height: 16,),
-            Container(
-              alignment: Alignment.center,
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30)
-              ),
-              child: const Text(
-                'Sign Up with Google',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 16
-                ),
+                child: Text('Sign Up', style: TextStyle(color: Colors.white),),
               ),
             ),
             const SizedBox(height: 16,),
@@ -142,7 +120,7 @@ class _SignUpState extends State<SignUp> {
                     child: const Text(
                       'Sign in now',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.blue,
                         fontSize: 16,
                         decoration: TextDecoration.underline
                       ),

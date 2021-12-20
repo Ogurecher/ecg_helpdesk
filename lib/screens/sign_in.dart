@@ -86,9 +86,9 @@ class _SignInState extends State<SignIn> {
                 ],
               ),
             ),
-            const SizedBox(height: 8,),
-            GestureDetector(
-              onTap: () {
+            const SizedBox(height: 40,),
+            TextButton(
+              onPressed: () {
                 signIn();
               },
               child: Container(
@@ -96,15 +96,10 @@ class _SignInState extends State<SignIn> {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xff007EF4),
-                      Color(0xff2A75BC),
-                    ]
-                  ),
+                  color: Colors.blue,
                   borderRadius: BorderRadius.circular(30)
                 ),
-                child: Text('Sign In'),
+                child: Text('Sign In', style: TextStyle(color: Colors.white),),
               ),
             ),
             const SizedBox(height: 16,),
@@ -121,7 +116,7 @@ class _SignInState extends State<SignIn> {
                     child: const Text(
                       'Register now',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.blue,
                         fontSize: 16,
                         decoration: TextDecoration.underline
                       ),
