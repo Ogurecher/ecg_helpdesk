@@ -8,21 +8,13 @@ import 'package:flutter/material.dart';
 Widget channelTile(BuildContext context, QueryDocumentSnapshot channel, int currentNavigationIndex, {bool isSubscribed = false}) {
   Icon notificationIcon = Icon(isSubscribed ? Icons.notifications_on : Icons.notifications_off);
 
-  return Container(
-    child: Row(
-      children: [
-        Container(
-          child: TextButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ChannelTickets(channel, currentNavigationIndex)));
-            },
-            child: Text(channel.get('name'))
-          ),
-        ),
-        Spacer(),
-        SubscribeButton(channel, isSubscribed)
-      ],
-    ),
+  return ListTile(
+    title: Text(channel.get('name'), style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),),
+    trailing: SubscribeButton(channel, isSubscribed),
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ChannelTickets(channel, currentNavigationIndex)));
+    },
+    contentPadding: EdgeInsets.symmetric(vertical: 6, horizontal: 24),
   );
 }
 

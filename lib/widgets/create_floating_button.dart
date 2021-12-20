@@ -8,7 +8,7 @@ FloatingActionButton createFloatingButton(BuildContext context, GlobalKey<FormSt
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Create'),
+            title: Text('Create new'),
             content: Form(
               key: formKey,
               child: TextFormField(

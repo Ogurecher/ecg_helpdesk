@@ -6,6 +6,7 @@ import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/channel_tile.dart';
 import 'package:ecg_helpdesk/widgets/create_floating_button.dart';
+import 'package:ecg_helpdesk/widgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class ChannelSearch extends StatefulWidget {
@@ -58,7 +59,7 @@ class _ChannelSearchState extends State<ChannelSearch> {
   @override
   void initState() {
     snapshotChannels();
-    // updateSubscribedChannelIds();
+    updateSubscribedChannelIds();
     super.initState();
   }
 
@@ -87,16 +88,7 @@ class _ChannelSearchState extends State<ChannelSearch> {
       appBar: AppBar(
         title: const Text("All Channels"),
         actions: [
-          GestureDetector(
-            onTap: () {
-              authMethods.signOut();
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Authenticate()));
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: const Icon(Icons.exit_to_app)
-            ),
-          )
+          logoutButton(context)
         ],
       ),
       floatingActionButton: createFloatingButton(context, _createChannelKey, _createChannelNameFieldController, createChannel),

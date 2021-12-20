@@ -3,6 +3,7 @@ import 'package:ecg_helpdesk/providers/database.dart';
 import 'package:ecg_helpdesk/util/helper_functions.dart';
 import 'package:ecg_helpdesk/util/mocks.dart';
 import 'package:ecg_helpdesk/widgets/channel_tickets_tile.dart';
+import 'package:ecg_helpdesk/widgets/logout_button.dart';
 import 'package:flutter/material.dart';
 
 class MyTickets extends StatefulWidget {
@@ -45,7 +46,12 @@ class _MyTicketsState extends State<MyTickets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("My Tickets")),
+      appBar: AppBar(
+        title: const Text("My Tickets"),
+        actions: [
+          logoutButton(context)
+        ],
+      ),
       body: Container(
         child: myTicketsList()
       ),

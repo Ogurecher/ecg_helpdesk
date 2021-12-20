@@ -45,12 +45,15 @@ class _ChannelTicketsState extends State<ChannelTickets> {
   }
 
   Widget channelTicketsList() {
-    return unassignedChannelTicketsSnapshot == null ? ListView() : ListView.builder(
+    return unassignedChannelTicketsSnapshot == null ? ListView() : ListView.separated(
       shrinkWrap: true,
       itemCount: unassignedChannelTicketsSnapshot!.docs.length,
       itemBuilder: (context, index) {
         return channelTicketsTile(context, unassignedChannelTicketsSnapshot!.docs[index], widget.currentNavigationIndex);
-      }
+      },
+      separatorBuilder: (context, index) {
+        return Divider();
+      },
     );
   }
 
