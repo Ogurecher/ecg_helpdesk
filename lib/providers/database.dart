@@ -184,16 +184,4 @@ class DatabaseMethods {
     QuerySnapshot channelSubscription = await FirebaseFirestore.instance.collection('channelSubscriptions').where('channelId', isEqualTo: channelId).where('userId', isEqualTo: userId).get();
     channelSubscription.docs.first.reference.delete();
   }
-
-  static deleteChannel(String channelId) {
-
-  }
-
-  static deleteTicket(String ticketId) {
-
-  }
-
-  static deleteUser(String userId) {
-
-  }
 }
