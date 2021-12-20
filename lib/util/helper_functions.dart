@@ -44,6 +44,6 @@ class HelperFunctions {
 
   static Future<String?> getUserIdSharedPreference() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return await prefs.getString(sharedPreferenceUserIdKey);
+    return prefs.getString(sharedPreferenceUserIdKey) ?? '';
   }
 }

@@ -27,6 +27,7 @@ class _TicketMessagesState extends State<TicketMessages> {
 
   Stream<QuerySnapshot>? ticketMessagesStream;
   bool isOpen = true;
+  String userId = '';
 
   sendMessage() async {
     String fileURL = '';
@@ -43,7 +44,12 @@ class _TicketMessagesState extends State<TicketMessages> {
   pickImage() async {
     ImagePicker picker = ImagePicker();
 
-    XFile? imageXFile = await picker.pickImage(source: ImageSource.gallery);
+    XFile? imageXFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 700,
+      maxHeight: 400,
+      imageQuality: 70
+    );
 
     if (imageXFile != null) {
       File? imageFile = File(imageXFile.path);
@@ -78,13 +84,27 @@ class _TicketMessagesState extends State<TicketMessages> {
         return snapshot.hasData ? ListView.builder(
           itemCount: snapshot.data!.docs.length,
           shrinkWrap: true,
-          itemBuilder: (context, index){
+          itemBuilder: (context, index) {
+            HelperFunctions.getUserIdSharedPreference();
             return Container(
-              child: Column(
-                children: [
-                  imageFromURL(snapshot.data!.docs[index].get('fileURL')),
-                  Text(snapshot.data!.docs[index].get('text')),
-                ],
+              padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
+              child: Align(
+                alignment: (snapshot.data!.docs[index].get('senderId') == userId ? Alignment.topRight : Alignment.topLeft),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: (snapshot.data!.docs[index].get('senderId')  == userId ?  Colors.blue[200] : Colors.grey.shade200),
+                  ),
+                  padding: EdgeInsets.all(16),
+                  child: snapshot.data!.docs[index].get('fileURL') != '' ? Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(child: Text(snapshot.data!.docs[index].get('text'), style: TextStyle(fontSize: 15),), padding: EdgeInsets.only(bottom: 8),),
+                      imageFromURL(snapshot.data!.docs[index].get('fileURL')),
+                    ],
+                  ) : Text(snapshot.data!.docs[index].get('text'), style: TextStyle(fontSize: 15),),
+                ),
               ),
             );
           },
@@ -107,11 +127,22 @@ class _TicketMessagesState extends State<TicketMessages> {
         });
       },
       child: isOpen ? Icon(Icons.check) : Icon(Icons.settings_backup_restore),
+      backgroundColor: Colors.green,
     );
+  }
+
+  updateUserId() {
+    HelperFunctions.getUserIdSharedPreference().then((value) {
+      setState(() {
+        userId = value!;
+      });
+    });
   }
 
   @override
   void initState() {
+    updateUserId();
+
     DatabaseMethods.getTicketMessagesStream(widget.ticket.id).then((value) {
       setState(() {
         ticketMessagesStream = value;

@@ -11,7 +11,7 @@ Widget channelTicketsTile(BuildContext context, QueryDocumentSnapshot ticket, in
 
   return ListTile(
     title: Text(ticket.get('name'), style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),),
-    subtitle: Text(timeCreated),
+    subtitle: Text('${timeCreated}  ${ticket.get('status')}'),
     trailing: AssignButton(ticket),
     onTap: () {
       Navigator.push(context, MaterialPageRoute(builder: (context) => TicketMessages(ticket, currentNavigationIndex)));
